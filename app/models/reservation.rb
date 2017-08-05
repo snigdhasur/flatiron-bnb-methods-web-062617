@@ -4,12 +4,15 @@ class Reservation < ActiveRecord::Base
   has_one :review
 
 
-  validates_presence_of :checkin, :checkout, :listing_id, :status
+  validates :checkin, :checkout, :listing_id, :status, presence: true
   validate :checkin_before_checkout
   validate :guest_diff_from_host
   validate :invalid_checkin
   validate :invalid_checkout
   validate :invalid_checkin_checkout
+
+
+
 
 
   def checkin_before_checkout
@@ -24,21 +27,23 @@ end
     end
 end 
 
-  def invalid_checkin
-  	if checkin.present? && listing_id.present? && Listing.find(listing_id).reservations.any? { |reservation| checkin <= reservation.checkout && checkin >= reservation.checkin }
-		errors.add(:checkin, "not a valid checkin time")
+
+
+def invalid_checkin
+    if checkin.present? && listing_id.present? && Listing.find(listing_id).reservations.reject{|reservation| reservation == self}.any? { |reservation| checkin <= reservation.checkout && checkin >= reservation.checkin }
+    errors.add(:checkin, "not a valid checkin time")
     end
 end 
 
 
   def invalid_checkout
-  	if checkout.present? && listing_id.present? && Listing.find(listing_id).reservations.any? { |reservation| checkout <= reservation.checkout && checkout >= reservation.checkin }
+  	if checkout.present? && listing_id.present? && Listing.find(listing_id).reservations.reject{|reservation| reservation == self}.any? { |reservation| checkout <= reservation.checkout && checkout >= reservation.checkin }
 		errors.add(:checkout, "not a valid checkout time")
     end
 end 
 
   def invalid_checkin_checkout
-  	if checkin.present? && checkout.present? && listing_id.present? && Listing.find(listing_id).reservations.any? { |reservation| checkin <= reservation.checkout && checkout >= reservation.checkin } 
+  	if checkin.present? && checkout.present? && listing_id.present? && Listing.find(listing_id).reservations.reject{|reservation| reservation == self}.any? { |reservation| checkin <= reservation.checkout && checkout >= reservation.checkin } 
 		errors.add(:checkin, "not valid dates")
 		errors.add(:checkout, "not valid dates")
     end

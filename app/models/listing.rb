@@ -3,8 +3,22 @@ class Listing < ActiveRecord::Base
   belongs_to :host, :class_name => "User"
   has_many :reservations
   has_many :reviews, :through => :reservations
-  has_many :guests, :class_name => "User", :through => :reservations
+  has_many :guests, :class_name => "User", through: :reservations, :foreign_key => 'guest_id'
   
+
+  # has_many :guests, :class_name => "User", through: :reservations, source: :review
+
+  # SQLite3::SQLException: no such column: users.reservation_id: 
+  # SELECT "users".* FROM "users" INNER JOIN "reservations" ON 
+  # "users"."reservation_id" = "reservations"."id" 
+  # WHERE "reservations"."listing_id" = ? AND "users"."id" = ?
+
+ #  listing.guests.to_sql
+ # => "SELECT \"users\".* FROM \"users\" 
+ # INNER JOIN \"reservations\" ON \"users\".\"id\" = \"reservations\".\"guest_id\" 
+ # WHERE \"reservations\".\"listing_id\" = 2" 
+
+
   validates :address, presence: true 
   validates :listing_type, presence: true 
   validates :title, presence: true 
