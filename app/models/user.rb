@@ -15,36 +15,5 @@ class User < ActiveRecord::Base
 
 
 
-
-  # has_many :guests, through: :trips, source: :guest
-  # has_many :hosts, through: :listings, source: :host
-
-
-  # def host_reviews
-  # 	if self.host == true 
-  # 		host_listings = Listing.all.where(host_id: self.id)
-  # 		review_array = []
-  # 		host_listings.each do |listing|
-  # 			review_array << listing.reviews   		
-  # 		end
-  # 		review_array.flatten 
-  # 	end
-  # end 
-
-  # def guests
-  # 	if self.host == true 
-  # 		host_listings = Listing.all.where(host_id: self.id)
-  # 		binding.pry
-  # 		review_array = []
-  # 		host_listings.each do |listing|
-  # 			review_array << listing.reviews   		
-
-  # 		end
-  # 		review_array.flatten 
-  # 	end
-  # end  
-
-
-
   
 end
